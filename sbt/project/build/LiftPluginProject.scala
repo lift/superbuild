@@ -5,7 +5,7 @@ class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) with Mave
   // Set publish.remote=true to publish to remote repo, defaults to maven local repo
   lazy val publishRemote = propertyOptional[Boolean](false, true)
   
-  lazy val mavenLocal = "Local Maven Repository" at "file://" + Resolver.userMavenRoot
+  // lazy val mavenLocal = "Local Maven Repository" at "file://" + Resolver.userMavenRoot
   
   // Set up publish repository
   object PublishRepositories {
@@ -45,12 +45,14 @@ protected trait MavenCredentials extends BasicDependencyProject {
   }
 
   protected def loadMavenCredentials(file: java.io.File) {
-    import xml._
-    val mvnSettings = XML.loadFile(file)
-    for { s <- mvnSettings \ "servers" \ "server" } {
-      val host = (s \ "id").text
-      val realm = if (host == scalaTools._2) scalaTools._1 else "Unknown"
-      Credentials.add(realm, host, (s \ "username").text, (s \ "password").text)
+    try {
+      xml.XML.loadFile(file) \ "servers" \ "server" foreach(s => {
+        val host = (s \ "id").text
+        val realm = if (host == scalaTools._2) scalaTools._1 else "Unknown"
+        Credentials.add(realm, host, (s \ "username").text, (s \ "password").text)
+      })
+    } catch {
+      case e => log.warn("Could not read the settings file %s [%s]".format(file, e.getMessage))
     }
   }
 
