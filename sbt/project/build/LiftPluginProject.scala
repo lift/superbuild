@@ -1,6 +1,6 @@
 import sbt._
 
-class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) {
+class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) with MavenCredentials {
 
   // Set publish.remote=true to publish to remote repo, defaults to maven local repo
   lazy val publishRemote = propertyOptional[Boolean](false, true)
@@ -18,8 +18,6 @@ class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) {
     if (version.toString.endsWith("-SNAPSHOT")) PublishRepositories.snapshot
     else PublishRepositories.release
   
-  Credentials(Path.userHome / ".ivy2" / ".scalatools.credentials", log)
-  
   // Tell SBT to publish to local Maven repository unless publish.remote=true
   override def defaultPublishRepository =
     if (!publishRemote.value) Some(PublishRepositories.local)
@@ -31,8 +29,29 @@ class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) {
       if (version.toString.endsWith("-SNAPSHOT")) Set(ScalaToolsSnapshots)
       else Set()
     }
-  // override def repositories =
-  //   if (version.toString.endsWith("-SNAPSHOT")) super.repositories + PublishRepositories.local + ScalaToolsSnapshots
-  //   else super.repositories
+}
+
+protected trait MavenCredentials extends BasicDependencyProject {
+
+  lazy val ivyCredentialsPath   = Path.userHome / ".ivy2" / ".scalatools.credentials"
+  lazy val mavenCredentialsPath = Path.userHome / ".m2" / "settings.xml"
+
+  lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
+
+  (ivyCredentialsPath.asFile, mavenCredentialsPath.asFile) match {
+    case(ivy, _) if ivy.canRead => Credentials(ivy, log)
+    case(_, mvn) if mvn.canRead => loadMavenCredentials(mvn)
+    case _ => log.warn("Could not read any of the settings files %s or %s".format(ivyCredentialsPath, mavenCredentialsPath))
+  }
+
+  protected def loadMavenCredentials(file: java.io.File) {
+    import xml._
+    val mvnSettings = XML.loadFile(file)
+    for { s <- mvnSettings \ "servers" \ "server" } {
+      val host = (s \ "id").text
+      val realm = if (host == scalaTools._2) scalaTools._1 else "Unknown"
+      Credentials.add(realm, host, (s \ "username").text, (s \ "password").text)
+    }
+  }
 
 }
