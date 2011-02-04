@@ -40,27 +40,38 @@ protected trait Dependency extends BasicManagedProject {
 
   // Compile scope: available in all classpath, transitive by default
   object CompileScope {
-    lazy val commons_codec      = "commons-codec" % "commons-codec" % "1.4"
-    lazy val commons_fileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2"
-    lazy val commons_httpclient = "commons-httpclient" % "commons-httpclient" % "3.1"
-    lazy val dispatch           = "net.databinder" %% "dispatch-http" % "0.7.8"
-    lazy val javamail           = "javax.mail" % "mail" % "1.4.1"
-    lazy val joda_time          = "joda-time" % "joda-time" % "1.6.2"
-    lazy val htmlparser         = "nu.validator.htmlparser" % "htmlparser" % "1.2.1"
-    lazy val mongo_driver       = "org.mongodb" % "mongo-java-driver" % "2.4"
-    lazy val slf4j_api          = "org.slf4j" % "slf4j-api" % "1.6.1"
-    lazy val paranamer          = "com.thoughtworks.paranamer" % "paranamer" % "2.3"
-    lazy val scalajpa           = "org.scala-libs" %% "scalajpa" % "1.2"
-    lazy val squeryl            = "org.squeryl" %% "squeryl" % "0.9.4-RC3"
+    lazy val amqp_client          = "com.rabbitmq" % "amqp-client" % "1.7.2"
+    lazy val commons_codec        = "commons-codec" % "commons-codec" % "1.4"
+    lazy val commons_fileupload   = "commons-fileupload" % "commons-fileupload" % "1.2.2"
+    lazy val commons_httpclient   = "commons-httpclient" % "commons-httpclient" % "3.1"
+    lazy val dispatch_http        = "net.databinder" %% "dispatch-http" % "0.7.8"
+    lazy val javamail             = "javax.mail" % "mail" % "1.4.1"
+    lazy val joda_time            = "joda-time" % "joda-time" % "1.6.2"
+    lazy val htmlparser           = "nu.validator.htmlparser" % "htmlparser" % "1.2.1"
+    lazy val mongo_driver         = "org.mongodb" % "mongo-java-driver" % "2.4"
+    lazy val openid4java_consumer = "org.openid4java" % "openid4java-consumer" % "0.9.5"
+    lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer" % "2.3"
+    lazy val sanselan             = "org.apache.sanselan" % "sanselan" % "0.97-incubator"
+    lazy val scalajpa             = "org.scala-libs" %% "scalajpa" % "1.2"
+    lazy val scalate_core         = "org.fusesource.scalate" % "scalate-core" % "1.1"
+    lazy val slf4j_api            = "org.slf4j" % "slf4j-api" % "1.6.1"
+    lazy val smackx               = "jivesoftware" % "smack" % "3.1.0"
+    lazy val squeryl              = "org.squeryl" %% "squeryl" % "0.9.4-RC3"
   }
 
   object ProvidedScope {
     // Provided scope: provided by container, available only in compile and test classpath, non-transitive by default
+    lazy val atomikos_api    = "com.atomikos" % "transactions-api" % "3.2.3" % "provided"
+    lazy val atomikos_jta    = "com.atomikos" % "transactions-jta" % "3.2.3" % "provided"
+    lazy val atomikos_txn    = "com.atomikos" % "transactions" % "3.2.3" % "provided"
+    lazy val atomikos_util   = "com.atomikos" % "atomikos-util" % "3.2.3" % "provided"
+    lazy val hibernate_em    = "org.hibernate" % "hibernate-entitymanager" % "3.4.0.GA" % "provided"
     lazy val logback         = "ch.qos.logback" % "logback-classic" % "0.9.27" % "provided"
     lazy val log4j           = "log4j" % "log4j" % "1.2.16" % "provided"
     lazy val slf4j_log4j12   = "org.slf4j" % "slf4j-log4j12" % "1.6.1" % "provided" // make it runtime?
     lazy val persistence_api = "javax.persistence" % "persistence-api" % "1.0" % "provided"
     lazy val servlet_api     = "javax.servlet" % "servlet-api" % "2.5" % "provided"
+    lazy val transaction_api = "javax.transaction" % "transaction-api" % "1.1" % "provided"
   }
   
   object RuntimeScope {
@@ -69,8 +80,11 @@ protected trait Dependency extends BasicManagedProject {
     lazy val h2database = "com.h2database" % "h2" % "1.2.147" % "runtime" //% "optional"
   }
 
+
   object TestScope {
     // Test scope: available only in test classpath, non-transitive by default
+    lazy val apacheds   = "org.apache.directory.server" % "apacheds-server-integ" % "1.5.5" % "test" // TODO: See if something alternate with lesser footprint can be used
+    // lazy val apacheds   = "org.apache.directory.server" % "apacheds-core" % "1.5.7" % "test"
     lazy val junit      = "junit" % "junit" % "4.7" % "test"
     lazy val jwebunit   = "net.sourceforge.jwebunit" % "jwebunit-htmlunit-plugin" % "2.5" % "test"
     lazy val scalacheck = "org.scala-tools.testing" %% "scalacheck" % scalacheckVersion % "test"
