@@ -36,12 +36,6 @@ trait LiftParentProject extends ParentProject with Publishing with Dependency wi
  */
 trait LiftDefaultProject extends DefaultProject with LiftScalaProject {
 
-  // Add canonical test scope dependencies
-  override def libraryDependencies = {
-    import TestScope._
-    super.libraryDependencies ++ Seq(specs, scalacheck, junit)
-  }
-
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
 
@@ -55,6 +49,7 @@ trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
+
 }
 
 
@@ -165,5 +160,13 @@ protected trait LiftScalaProject extends BasicScalaProject with Publishing with 
     documentTitle(docTitle) :: CompoundDocOption("-doc-version", version.toString) :: Nil
 
   lazy val docTitle = "%s %s API".format(projectNameFormal.value, version)
+
+  // Dependencies
+  // ------------
+  // Add canonical test scope dependencies by default
+  override def libraryDependencies = {
+    import TestScope._
+    super.libraryDependencies ++ Seq(specs, scalacheck, junit)
+  }
 
 }

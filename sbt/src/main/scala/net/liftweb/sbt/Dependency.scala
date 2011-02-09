@@ -32,10 +32,10 @@ import _root_.sbt._
 protected trait Dependency extends BasicManagedProject {
 
   // Add all the Scala version specific variations here
-  lazy val (specsVersion, scalacheckVersion) =
+  lazy val (scalaz, specsVersion, scalacheckVersion) =
     buildScalaVersion match {
-      case "2.8.0" => ("1.6.5", "1.7")
-      case _       => ("1.6.7.2", "1.8")
+      case "2.8.0" => ("5.0", "1.6.5", "1.7")
+      case _       => ("5.1-SNAPASHOT", "1.6.7.2", "1.8")
     }
 
   // Compile scope: available in all classpath, transitive by default
@@ -53,7 +53,7 @@ protected trait Dependency extends BasicManagedProject {
     lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer" % "2.3"
     lazy val sanselan             = "org.apache.sanselan" % "sanselan" % "0.97-incubator"
     lazy val scalajpa             = "org.scala-libs" %% "scalajpa" % "1.2"
-    lazy val scalate_core         = "org.fusesource.scalate" % "scalate-core" % "1.1"
+    lazy val scalate_core         = "org.fusesource.scalate" % "scalate-core" % "1.3.2"
     lazy val slf4j_api            = "org.slf4j" % "slf4j-api" % "1.6.1"
     lazy val smackx               = "jivesoftware" % "smack" % "3.1.0"
     lazy val squeryl              = "org.squeryl" %% "squeryl" % "0.9.4-RC3"
@@ -83,15 +83,16 @@ protected trait Dependency extends BasicManagedProject {
 
   object TestScope {
     // Test scope: available only in test classpath, non-transitive by default
-    lazy val apacheds   = "org.apache.directory.server" % "apacheds-server-integ" % "1.5.5" % "test" // TODO: See if something alternate with lesser footprint can be used
-    // lazy val apacheds   = "org.apache.directory.server" % "apacheds-core" % "1.5.7" % "test"
-    lazy val junit      = "junit" % "junit" % "4.7" % "test"
-    lazy val jwebunit   = "net.sourceforge.jwebunit" % "jwebunit-htmlunit-plugin" % "2.5" % "test"
-    lazy val scalacheck = "org.scala-tools.testing" %% "scalacheck" % scalacheckVersion % "test"
-    lazy val specs      = "org.scala-tools.testing" %% "specs" % specsVersion % "test"
-    lazy val jetty6     = "org.mortbay.jetty" % "jetty" % "6.1.26" % "test"
-    lazy val jetty7     = "org.eclipse.jetty" % "jetty-webapp" % "7.2.2.v20101205" % "test"
-    lazy val jetty8     = "org.eclipse.jetty" % "jetty-webapp" % "8.0.0.M2" % "test"
+    lazy val apacheds    = "org.apache.directory.server" % "apacheds-server-integ" % "1.5.5" % "test" // TODO: See if something alternate with lesser footprint can be used
+    // lazy val apacheds = "org.apache.directory.server" % "apacheds-core" % "1.5.7" % "test"
+    lazy val junit       = "junit" % "junit" % "4.7" % "test"
+    lazy val jwebunit    = "net.sourceforge.jwebunit" % "jwebunit-htmlunit-plugin" % "2.5" % "test"
+    lazy val mockito_all = "org.mockito" % "mockito-all" % "1.8.5" % "test"
+    lazy val scalacheck  = "org.scala-tools.testing" %% "scalacheck" % scalacheckVersion % "test"
+    lazy val specs       = "org.scala-tools.testing" %% "specs" % specsVersion % "test"
+    lazy val jetty6      = "org.mortbay.jetty" % "jetty" % "6.1.26" % "test"
+    lazy val jetty7      = "org.eclipse.jetty" % "jetty-webapp" % "7.2.2.v20101205" % "test"
+    lazy val jetty8      = "org.eclipse.jetty" % "jetty-webapp" % "8.0.0.M2" % "test"
   }
 
 }

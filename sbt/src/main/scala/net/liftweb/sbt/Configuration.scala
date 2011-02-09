@@ -44,7 +44,7 @@ protected trait Configuration extends BasicManagedProject {
   // Custom format for java.net.URL
   implicit lazy val urlFormat = new SimpleFormat[URL] { def fromString(s: String) = new URL(s) }
 
-  // Additional user-defined properties that optionally can be defined for the project.
+  // Additional user-defined properties that optionally can be defined for the project
   lazy val projectNameFormal           = propertyOptional[String](name.split("-").map(_.capitalize).mkString(" "))
   lazy val projectLocation             = propertyOptional[URL](new URL("http://www.liftweb.net"), true)
   lazy val projectInceptionyear        = propertyOptional[Int](2006, true)
@@ -61,6 +61,7 @@ protected trait Configuration extends BasicManagedProject {
   // Custom flag to enable remote publishing
   lazy val publishRemote = propertyOptional[Boolean](false, true)
 
+  // Test if project is a SNAPSHOT
   def isSnapshot = version.toString.endsWith("-SNAPSHOT")
 
 	override def toString = 

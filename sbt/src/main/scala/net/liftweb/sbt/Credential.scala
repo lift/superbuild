@@ -42,15 +42,14 @@ protected trait Credential extends BasicManagedProject {
   lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
 
   (ivyCredentials.asFile, mavenCredentials.asFile) match {
-    case(ivy, _) if ivy.canRead => {
+    case(ivy, _) if ivy.canRead =>
       log.debug("Loading credentials from %s".format(ivy))
       Credentials(ivy, log)
-    }
-    case(_, mvn) if mvn.canRead => {
+    case(_, mvn) if mvn.canRead =>
       log.debug("Loading credentials from %s".format(mvn))
       loadMavenCredentials(mvn)
-    }
-    case _ => log.warn("Could not read any of the settings files %s or %s".format(ivyCredentials, mavenCredentials))
+    case _ =>
+      log.warn("Could not read any of the settings files %s or %s".format(ivyCredentials, mavenCredentials))
   }
 
   protected def loadMavenCredentials(file: java.io.File) {
