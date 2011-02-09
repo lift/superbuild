@@ -32,7 +32,7 @@ import _root_.sbt._
 protected trait Dependency extends BasicManagedProject {
 
   // Add all the Scala version specific variations here
-  lazy val (scalaz, specsVersion, scalacheckVersion) =
+  lazy val (scalazVersion, specsVersion, scalacheckVersion) =
     buildScalaVersion match {
       case "2.8.0" => ("5.0", "1.6.5", "1.7")
       case _       => ("5.1-SNAPASHOT", "1.6.7.2", "1.8")
