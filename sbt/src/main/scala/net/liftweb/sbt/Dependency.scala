@@ -54,6 +54,7 @@ protected trait Dependency extends BasicManagedProject {
     lazy val sanselan             = "org.apache.sanselan" % "sanselan" % "0.97-incubator"
     lazy val scalajpa             = "org.scala-libs" %% "scalajpa" % "1.2"
     lazy val scalate_core         = "org.fusesource.scalate" % "scalate-core" % "1.1"
+    lazy val scalaz               = "com.googlecode.scalaz" %% "scalaz-core" % "5.0"
     lazy val slf4j_api            = "org.slf4j" % "slf4j-api" % "1.6.1"
     lazy val smackx               = "jivesoftware" % "smack" % "3.1.0"
     lazy val squeryl              = "org.squeryl" %% "squeryl" % "0.9.4-RC3"
