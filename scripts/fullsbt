@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# This script is designed to provide a full build of Liftweb, including
+# the framework, modules and examples. It's intended to provide similar 
+# functionality to what we had when everything was in the same repo
+# and we ran Maven. 
+#
+# This script assumes that the superbuild directory is a sibling of 
+# the framework, modules and examples dirs, but you can override these
+# locations with environment variables of LIFT_FRAMEWORK_HOME, LIFT_MODULES_HOME
+# and LIFT_EXAMPLES_HOME
+
+if [ $# -lt 2 ]
+then
+    echo "Usage: fullbuild.sh <sbt command> [<sbt command> ...]"
+    echo "  This command is really geared toward the usage \"clean publish-local\","
+    echo "  but it can probably refined for other goals."
+    exit
+fi
+
+# translate SBT commands to Maven (or attempt to)
+MAVEN_COMMANDS=""
+
+for arg in "$@"; do
+    case "$arg" in 
+        ~*) echo "fullbuild.sh doesn't support continuous commands: \"$arg\""; exit
+            ;;
+        publish-local ) MAVEN_COMMANDS="$MAVEN_COMMANDS install" 
+            ;;
+        * ) MAVEN_COMMANDS="$MAVEN_COMMANDS $arg" 
+            ;;
+    esac
+done
+
+pushd ${LIFT_FRAMEWORK_HOME:=../../framework} && \
+./liftsh "$@" && popd && \
+pushd ${LIFT_MODULES_HOME:=../../modules} && \
+./liftsh "$@" && popd && \
+pushd ${LIFT_MODULES_HOME:=../../modules} && \
+mvn $MAVEN_COMMANDS && popd
