@@ -63,6 +63,16 @@ trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject {
  */
 trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
 
+  /**
+   * Sibling of this project, that is, other <a href="LiftDefaultProject.html">LiftDefaultProject</a>s
+   * having the same parent.
+   */
+  lazy val siblings =
+    info.parent.get.projectClosure.flatMap {
+      case c: LiftDefaultProject => Some(c)
+      case _ => None
+    }
+
   // We modify the parameter that docAction and docTestAction takes instead of modifying the action itself
   override def mainSources  = concatPaths(siblings) { case p: ScalaPaths => p.mainSources }
   override def testSources  = concatPaths(siblings) { case p: ScalaPaths => p.testSources }
@@ -72,12 +82,6 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
 		def finder: T => PathFinder = f orElse { case _ => Path.emptyPathFinder }
 		(Path.emptyPathFinder /: s) { _ +++ finder(_) }
 	}
-
-  private def siblings =
-    info.parent.get.projectClosure.flatMap {
-      case c: LiftDefaultProject => Some(c)
-      case _ => None
-    }
 
   // Nothing to compile, package, deliver or publish
 	override def compileAction     = Empty
@@ -120,6 +124,10 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
 
 protected trait LiftScalaProject extends BasicScalaProject with Publishing with Dependency with Credential {
 
+  // Auxillary artifacts
+  // -------------------
+  override def artifacts = super.artifacts ++ Seq(Artifact.sources(artifactID))
+
   // Compile options
   // ---------------
   override def compileOptions =
@@ -152,7 +160,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Publishing with 
   override def packageAction = super.packageAction dependsOn test
 
   // Publish source packages too
-  override def packageToPublishActions = packageSrc :: super.packageToPublishActions.toList
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)
 
   // Document options
   // ----------------
@@ -168,5 +176,8 @@ protected trait LiftScalaProject extends BasicScalaProject with Publishing with 
     import TestScope._
     super.libraryDependencies ++ Seq(specs, scalacheck, junit)
   }
+
+  // Additional system properties for convenience
+  System.setProperty("derby.stream.error.file", outputPath / "derby.log" absolutePath)
 
 }
