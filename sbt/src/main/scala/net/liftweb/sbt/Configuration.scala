@@ -41,7 +41,7 @@ protected trait Configuration extends BasicManagedProject {
 
   // Properties
   // ----------
-  // Custom format for java.net.URL
+  /** Custom property format for java.net.URL */
   implicit lazy val urlFormat = new SimpleFormat[URL] { def fromString(s: String) = new URL(s) }
 
   // Additional user-defined properties that optionally can be defined for the project
@@ -55,11 +55,15 @@ protected trait Configuration extends BasicManagedProject {
   lazy val projectLicenseLocation     = propertyOptional[URL](new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"), true)
   lazy val projectLicenseDistribution = propertyOptional[String]("repo", true)
 
-  // Custom flag to enable local maven repository
-  lazy val mavenLocal = propertyOptional[Boolean](false, true)  
+  /**
+   * Custom flag to enable local maven repository, defaults to system property <code>maven.local</code> if available.
+   */
+  lazy val mavenLocal = propertyOptional[Boolean](systemOptional[Boolean]("maven.local", false).value, true)
 
-  // Custom flag to enable remote publishing
-  lazy val publishRemote = propertyOptional[Boolean](false, true)
+  /**
+   * Custom flag to enable remote publishing, defaults to system property <code>publish.remote</code> if available.
+   */
+  lazy val publishRemote = propertyOptional[Boolean](systemOptional[Boolean]("publish.remote", false).value, true)
 
   // Test if project is a SNAPSHOT
   def isSnapshot = version.toString.endsWith("-SNAPSHOT")
