@@ -122,11 +122,17 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
 }
 
 
-protected trait LiftScalaProject extends BasicScalaProject with Publishing with Dependency with Credential {
+protected trait LiftScalaProject extends BasicScalaProject with Checksum with Publishing with Dependency with Credential {
 
   // Auxillary artifacts
   // -------------------
-  override def artifacts = super.artifacts ++ Seq(Artifact.sources(artifactID))
+  override def artifacts =
+    super.artifacts ++
+    Seq(
+      Artifact(artifactID, "sha1", "jar.sha1"),
+      Artifact.sources(artifactID),
+      Artifact(artifactID, "sha1", "jar.sha1", "sources")
+    )
 
   // Compile options
   // ---------------
@@ -160,7 +166,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Publishing with 
   override def packageAction = super.packageAction dependsOn test
 
   // Publish source packages too
-  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(checksum, packageSrc, checksumSrc)
 
   // Document options
   // ----------------
