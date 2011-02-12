@@ -30,28 +30,26 @@ protected trait Checksum extends BasicScalaProject {
   trait ChecksumOption extends ActionOption
   def checksumOptions: Seq[ChecksumOption] = Nil
 
-  protected def checksumAction        = checksumTask(jarPath, checksumOptions) dependsOn `package` describedAs ChecksumDescription
-  protected def checksumTestAction    = checksumTask(packageTestJar, checksumOptions) dependsOn packageTest describedAs ChecksumTestDescription
-  protected def checksumDocsAction    = checksumTask(packageDocsJar, checksumOptions) dependsOn packageDocs describedAs ChecksumDocsDescription
-  protected def checksumSrcAction     = checksumTask(packageSrcJar, checksumOptions) dependsOn packageSrc describedAs ChecksumSrcDescription
-  protected def checksumTestSrcAction = checksumTask(packageTestSrcJar, checksumOptions) dependsOn packageTestSrc describedAs ChecksumTestSrcDescription
-  protected def checksumPomAction     = checksumTask(pomPath, checksumOptions) dependsOn makePom describedAs ChecksumPomDescription
+  object ChecksumDescriptions {
+    import BasicScalaProject._
+    val ChecksumDescription           = PackageDescription + checksumDescriptionSuffix
+    val TestChecksumDescription       = TestPackageDescription + checksumDescriptionSuffix
+    val DocChecksumDescription        = DocPackageDescription + checksumDescriptionSuffix
+    val SourceChecksumDescription     = SourcePackageDescription + checksumDescriptionSuffix
+    val TestSourceChecksumDescription = TestSourcePackageDescription + checksumDescriptionSuffix
+    val ProjectChecksumDescription    = ProjectPackageDescription + checksumDescriptionSuffix
+    val PomChecksumDescription        = "Creates the pom file." + checksumDescriptionSuffix
 
-  // override def makePomAction = checksumTask(pomPath, checksumOptions) :: Nil
-  
-  lazy val checksum        = checksumAction
-  lazy val checksumTest    = checksumTestAction
-  lazy val checksumDocs    = checksumDocsAction
-  lazy val checksumSrc     = checksumSrcAction
-  lazy val checksumTestSrc = checksumTestSrcAction
-  lazy val checksumPom     = checksumPomAction
+    val checksumDescriptionSuffix = " Additionally, creates the corresponding checksum file."
+  }
 
-  val ChecksumDescription        = "Creates a checksum file for given jar file."
-  val ChecksumTestDescription    = "Creates a checksum file for given test jar file."
-  val ChecksumDocsDescription    = "Creates a checksum file for given docs jar file."
-  val ChecksumSrcDescription     = "Creates a checksum file for given source jar file."
-  val ChecksumTestSrcDescription = "Creates a checksum file for given test source jar file."
-  val ChecksumPomDescription     = "Creates a checksum file for given pom file."
+  protected def checksumAction        = checksumTask(jarPath, checksumOptions)
+  protected def checksumTestAction    = checksumTask(packageTestJar, checksumOptions)
+  protected def checksumDocsAction    = checksumTask(packageDocsJar, checksumOptions)
+  protected def checksumSrcAction     = checksumTask(packageSrcJar, checksumOptions)
+  protected def checksumTestSrcAction = checksumTask(packageTestSrcJar, checksumOptions)
+  protected def checksumProjectAction = checksumTask(packageProjectZip, checksumOptions)
+  protected def checksumPomAction     = checksumTask(pomPath, checksumOptions)
 
   def checksumTask(artifactPath: => Path, options: ChecksumOption*): Task =
     checksumTask(artifactPath, options)
@@ -73,5 +71,24 @@ protected trait Checksum extends BasicScalaProject {
       val cs = Hash.toHex(Hash(artifactPath, log).right.get)
       FileUtilities.write(hashPath.asFile, cs, log)
     }
+
+  import ChecksumDescriptions._
+  // Inject checksum actions after corresponding package action
+  override def packageAction        = checksumAction dependsOn super.packageAction describedAs ChecksumDescription
+  override def packageTestAction    = checksumTestAction dependsOn super.packageTestAction describedAs TestChecksumDescription
+  override def packageDocsAction    = checksumDocsAction dependsOn super.packageDocsAction describedAs DocChecksumDescription
+  override def packageSrcAction     = checksumSrcAction dependsOn super.packageSrcAction describedAs SourceChecksumDescription
+  override def packageTestSrcAction = checksumTestSrcAction dependsOn super.packageTestSrcAction describedAs TestSourceChecksumDescription
+  override def packageProjectAction = checksumProjectAction dependsOn super.packageProjectAction describedAs ProjectChecksumDescription
+  override def makePomAction        = checksumPomAction dependsOn super.makePomAction describedAs PomChecksumDescription
+
+  // Add the corresponding checksum artifacts to the project
+	override def artifacts = {
+	  val sha = managedStyle match {
+      case ManagedStyle.Maven => Seq(Artifact(artifactID, "sha1", "jar.sha1"), Artifact(artifactID, "sha1", "pom.sha1"))
+      case _                  => Seq(Artifact(artifactID, "sha1", "jar.sha1"))
+    }
+    super.artifacts ++ sha
+  }
 
 }

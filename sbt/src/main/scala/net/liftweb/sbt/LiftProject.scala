@@ -133,13 +133,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Checksum with Pu
   // Auxillary artifacts
   // -------------------
   override def artifacts =
-    super.artifacts ++
-    Seq(
-      Artifact.sources(artifactID),
-      Artifact(artifactID, "sha1", "pom.sha1"),
-      Artifact(artifactID, "sha1", "jar.sha1"),
-      Artifact(artifactID, "sha1", "jar.sha1", "sources")
-    )
+    super.artifacts ++ Seq(Artifact.sources(artifactID), Artifact(artifactID, "sha1", "jar.sha1", "sources"))
 
   // Compile options
   // ---------------
@@ -173,7 +167,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Checksum with Pu
   override def packageAction = super.packageAction dependsOn test
 
   // Publish source packages too
-  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc, checksum, checksumSrc)
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)
 
   // Document options
   // ----------------
