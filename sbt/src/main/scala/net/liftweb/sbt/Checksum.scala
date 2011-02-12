@@ -35,18 +35,23 @@ protected trait Checksum extends BasicScalaProject {
   protected def checksumDocsAction    = checksumTask(packageDocsJar, checksumOptions) dependsOn packageDocs describedAs ChecksumDocsDescription
   protected def checksumSrcAction     = checksumTask(packageSrcJar, checksumOptions) dependsOn packageSrc describedAs ChecksumSrcDescription
   protected def checksumTestSrcAction = checksumTask(packageTestSrcJar, checksumOptions) dependsOn packageTestSrc describedAs ChecksumTestSrcDescription
+  protected def checksumPomAction     = checksumTask(pomPath, checksumOptions) dependsOn makePom describedAs ChecksumPomDescription
+
+  // override def makePomAction = checksumTask(pomPath, checksumOptions) :: Nil
   
   lazy val checksum        = checksumAction
   lazy val checksumTest    = checksumTestAction
   lazy val checksumDocs    = checksumDocsAction
   lazy val checksumSrc     = checksumSrcAction
   lazy val checksumTestSrc = checksumTestSrcAction
+  lazy val checksumPom     = checksumPomAction
 
   val ChecksumDescription        = "Creates a checksum file for given jar file."
   val ChecksumTestDescription    = "Creates a checksum file for given test jar file."
   val ChecksumDocsDescription    = "Creates a checksum file for given docs jar file."
   val ChecksumSrcDescription     = "Creates a checksum file for given source jar file."
   val ChecksumTestSrcDescription = "Creates a checksum file for given test source jar file."
+  val ChecksumPomDescription     = "Creates a checksum file for given pom file."
 
   def checksumTask(artifactPath: => Path, options: ChecksumOption*): Task =
     checksumTask(artifactPath, options)

@@ -92,6 +92,12 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
 	override def packageSrcAction     = Empty
 	override def packageTestSrcAction = Empty
 
+	override def checksumAction        = Empty
+	override def checksumTestAction    = Empty
+	override def checksumSrcAction     = Empty
+	override def checksumTestSrcAction = Empty
+	override def checksumPomAction     = Empty
+
   override def publishLocalAction = Empty
   override def deliverLocalAction = Empty
 
@@ -129,8 +135,9 @@ protected trait LiftScalaProject extends BasicScalaProject with Checksum with Pu
   override def artifacts =
     super.artifacts ++
     Seq(
-      Artifact(artifactID, "sha1", "jar.sha1"),
       Artifact.sources(artifactID),
+      Artifact(artifactID, "sha1", "pom.sha1"),
+      Artifact(artifactID, "sha1", "jar.sha1"),
       Artifact(artifactID, "sha1", "jar.sha1", "sources")
     )
 
@@ -166,7 +173,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Checksum with Pu
   override def packageAction = super.packageAction dependsOn test
 
   // Publish source packages too
-  override def packageToPublishActions = super.packageToPublishActions ++ Seq(checksum, packageSrc, checksumSrc)
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc, checksum, checksumSrc)
 
   // Document options
   // ----------------

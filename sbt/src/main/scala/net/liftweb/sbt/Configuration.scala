@@ -68,7 +68,6 @@ protected trait Configuration extends BasicManagedProject {
   // Test if project is a SNAPSHOT
   def isSnapshot = version.toString.endsWith("-SNAPSHOT")
 
-	override def toString = 
-	  "Project: " + projectNameFormal.get.getOrElse("at " + environmentLabel)
+	override def toString = "Project: " + projectNameFormal.get.getOrElse("at " + environmentLabel)
 
 }
