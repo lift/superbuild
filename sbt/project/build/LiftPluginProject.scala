@@ -3,10 +3,8 @@ import sbt._
 class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) with MavenCredentials {
 
   // Set publish.remote=true to publish to remote repo, defaults to maven local repo
-  lazy val publishRemote = propertyOptional[Boolean](false, true)
-  
-  // lazy val mavenLocal = "Local Maven Repository" at "file://" + Resolver.userMavenRoot
-  
+  lazy val publishRemote = propertyOptional[Boolean](systemOptional[Boolean]("publish.remote", false).value, true)
+
   // Set up publish repository
   object PublishRepositories {
     val local    = Resolver.file("Local Maven Distribution Repository", Path.userHome / ".m2" / "repository" asFile)
