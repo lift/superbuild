@@ -78,25 +78,19 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
   override def testSources  = concatPaths(siblings) { case p: ScalaPaths => p.testSources }
   override def docClasspath = concatPaths(siblings) { case p: BasicScalaProject => p.docClasspath }
 
-	private def concatPaths[T](s: Seq[T])(f: PartialFunction[T, PathFinder]) = {
-		def finder: T => PathFinder = f orElse { case _ => Path.emptyPathFinder }
-		(Path.emptyPathFinder /: s) { _ +++ finder(_) }
-	}
+  private def concatPaths[T](s: Seq[T])(f: PartialFunction[T, PathFinder]) = {
+    def finder: T => PathFinder = f orElse { case _ => Path.emptyPathFinder }
+    (Path.emptyPathFinder /: s) { _ +++ finder(_) }
+  }
 
   // Nothing to compile, package, deliver or publish
-	override def compileAction     = Empty
-	override def testCompileAction = Empty
+  override def compileAction     = Empty
+  override def testCompileAction = Empty
 
-	override def packageAction        = Empty
-	override def packageTestAction    = Empty
-	override def packageSrcAction     = Empty
-	override def packageTestSrcAction = Empty
-
-	override def checksumAction        = Empty
-	override def checksumTestAction    = Empty
-	override def checksumSrcAction     = Empty
-	override def checksumTestSrcAction = Empty
-	override def checksumPomAction     = Empty
+  override def packageAction        = Empty
+  override def packageTestAction    = Empty
+  override def packageSrcAction     = Empty
+  override def packageTestSrcAction = Empty
 
   override def publishLocalAction = Empty
   override def deliverLocalAction = Empty
@@ -104,11 +98,11 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
   override def deliverAction = Empty
   override def publishAction = Empty
 
-	override def makePomAction = Empty
+  override def makePomAction = Empty
 
   // To avoid write collisions with outputDirectories of parent
-	override def outputRootPath        = super.outputRootPath / "apidoc"
-	override def managedDependencyPath = super.managedDependencyPath / "apidoc"
+  override def outputRootPath        = super.outputRootPath / "apidoc"
+  override def managedDependencyPath = super.managedDependencyPath / "apidoc"
    
 }
 
@@ -133,7 +127,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Checksum with Pu
   // Auxillary artifacts
   // -------------------
   override def artifacts =
-    super.artifacts ++ Seq(Artifact.sources(artifactID), Artifact(artifactID, "sha1", "jar.sha1", "sources"))
+    super.artifacts ++ Seq(Artifact(artifactID, "sources"), Artifact(artifactID, "jar.sha1", "jar.sha1", "sources"))
 
   // Compile options
   // ---------------
