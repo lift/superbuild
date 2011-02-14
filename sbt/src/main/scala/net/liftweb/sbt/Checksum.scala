@@ -83,12 +83,9 @@ protected trait Checksum extends BasicScalaProject {
   override def makePomAction        = checksumPomAction dependsOn super.makePomAction describedAs PomChecksumDescription
 
   // Add the corresponding checksum artifacts to the project
-  override def artifacts =
-    managedStyle match {
-      case ManagedStyle.Maven =>
-        val sa = super.artifacts
-        sa ++ sa.map(a => Artifact(a.name, a.`type` + ".sha1", a.extension + ".sha1", a.classifier, Nil, None))
-      case _ => super.artifacts
-    }
+  override def artifacts = {
+    val sa = super.artifacts
+    sa ++ sa.map(a => Artifact(a.name, a.`type` + ".sha1", a.extension + ".sha1", a.classifier, Nil, None))
+  }
 
 }

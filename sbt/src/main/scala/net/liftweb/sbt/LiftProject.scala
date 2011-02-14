@@ -34,7 +34,7 @@ trait LiftParentProject extends ParentProject with Publishing with Dependency wi
 /**
  * Pre-configured mixin for standard Lift based library projects.
  */
-trait LiftDefaultProject extends DefaultProject with LiftScalaProject {
+trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Checksum {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
@@ -122,7 +122,7 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
 }
 
 
-protected trait LiftScalaProject extends BasicScalaProject with Publishing with Dependency with Credential with Checksum {
+protected trait LiftScalaProject extends BasicScalaProject with Publishing with Dependency with Credential {
 
   // Auxillary artifacts
   // -------------------
