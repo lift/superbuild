@@ -55,18 +55,28 @@ protected trait Configuration extends BasicManagedProject {
   lazy val projectLicenseLocation     = propertyOptional[URL](new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"), true)
   lazy val projectLicenseDistribution = propertyOptional[String]("repo", true)
 
-  /**
-   * Custom flag to enable local maven repository, defaults to system property <code>maven.local</code> if available.
-   */
-  lazy val mavenLocal = propertyOptional[Boolean](systemOptional[Boolean]("maven.local", false).value, true)
+  final val mavenLocal    = propertyOptional[Boolean](false, true)
+  final val publishRemote = propertyOptional[Boolean](false, true)
 
   /**
-   * Custom flag to enable remote publishing, defaults to system property <code>publish.remote</code> if available.
+   * Custom flag to enable local maven repository, the system property <code>maven.local</code> if available, wins.
    */
-  lazy val publishRemote = propertyOptional[Boolean](systemOptional[Boolean]("publish.remote", false).value, true)
+  def addMavenLocal = systemOptional[Boolean]("maven.local", mavenLocal.value).value
 
-  // Test if project is a SNAPSHOT
+  /**
+   * Custom flag to enable remote publishing, the system property <code>publish.remote</code> if available, wins.
+   */
+  def enableRemotePublish = systemOptional[Boolean]("publish.remote", publishRemote.value).value
+
+  /**
+   * Test if project is a SNAPSHOT
+   */
   def isSnapshot = version.toString.endsWith("-SNAPSHOT")
+
+  /**
+   * Enable setting <code>offline</code> mode via system property too.
+   */
+  override def ivyLocalOnly = systemOptional[Boolean]("offline", offline.value).value
 
   override def toString = "Project: " + projectNameFormal.get.getOrElse("at " + environmentLabel)
 

@@ -30,9 +30,9 @@ protected trait Publishing extends BasicManagedProject with Configuration {
   // ------------------
   override def repositories = {
     import scala.collection.mutable.Set
-    val extras: Set[Resolver] = Set()
+    val extras: Set[Resolver] = Set.empty
     if (isSnapshot) extras += ScalaToolsSnapshots
-    if (mavenLocal.value) extras += DownloadRepositories.local
+    if (addMavenLocal) extras += DownloadRepositories.local
     super.repositories ++ extras
   }
 
@@ -40,7 +40,7 @@ protected trait Publishing extends BasicManagedProject with Configuration {
   // ---------------
   override def defaultPublishRepository = {
     import DistributionRepositories._
-    if (!publishRemote.value) Some(local)
+    if (!enableRemotePublish) Some(local)
     else Some(if (isSnapshot) snapshot else release)
   }
 

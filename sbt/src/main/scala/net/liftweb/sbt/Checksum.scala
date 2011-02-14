@@ -32,15 +32,15 @@ protected trait Checksum extends BasicScalaProject {
 
   object ChecksumDescriptions {
     import BasicScalaProject._
-    val ChecksumDescription           = PackageDescription + checksumDescriptionSuffix
-    val TestChecksumDescription       = TestPackageDescription + checksumDescriptionSuffix
-    val DocChecksumDescription        = DocPackageDescription + checksumDescriptionSuffix
-    val SourceChecksumDescription     = SourcePackageDescription + checksumDescriptionSuffix
-    val TestSourceChecksumDescription = TestSourcePackageDescription + checksumDescriptionSuffix
-    val ProjectChecksumDescription    = ProjectPackageDescription + checksumDescriptionSuffix
-    val PomChecksumDescription        = "Creates the pom file." + checksumDescriptionSuffix
+    lazy val checksumDescriptionSuffix = " Additionally, creates the corresponding checksum file."
 
-    val checksumDescriptionSuffix = " Additionally, creates the corresponding checksum file."
+    lazy val ChecksumDescription           = PackageDescription + checksumDescriptionSuffix
+    lazy val TestChecksumDescription       = TestPackageDescription + checksumDescriptionSuffix
+    lazy val DocChecksumDescription        = DocPackageDescription + checksumDescriptionSuffix
+    lazy val SourceChecksumDescription     = SourcePackageDescription + checksumDescriptionSuffix
+    lazy val TestSourceChecksumDescription = TestSourcePackageDescription + checksumDescriptionSuffix
+    lazy val ProjectChecksumDescription    = ProjectPackageDescription + checksumDescriptionSuffix
+    lazy val PomChecksumDescription        = "Creates the pom file." + checksumDescriptionSuffix
   }
 
   protected def checksumAction        = checksumTask(jarPath, checksumOptions)
@@ -83,9 +83,12 @@ protected trait Checksum extends BasicScalaProject {
   override def makePomAction        = checksumPomAction dependsOn super.makePomAction describedAs PomChecksumDescription
 
   // Add the corresponding checksum artifacts to the project
-  override def artifacts = {
-    val sha = super.artifacts map (a => Artifact(a.name, a.`type` + ".sha1", a.extension + ".sha1", a.classifier, Nil, None))
-    super.artifacts ++ sha
-  }
+  override def artifacts =
+    managedStyle match {
+      case ManagedStyle.Maven =>
+        val sa = super.artifacts
+        sa ++ sa.map(a => Artifact(a.name, a.`type` + ".sha1", a.extension + ".sha1", a.classifier, Nil, None))
+      case _ => super.artifacts
+    }
 
 }

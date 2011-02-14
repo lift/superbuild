@@ -122,12 +122,20 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
 }
 
 
-protected trait LiftScalaProject extends BasicScalaProject with Checksum with Publishing with Dependency with Credential {
+protected trait LiftScalaProject extends BasicScalaProject with Publishing with Dependency with Credential with Checksum {
 
   // Auxillary artifacts
   // -------------------
   override def artifacts =
-    super.artifacts ++ Seq(Artifact(artifactID, "sources"), Artifact(artifactID, "jar.sha1", "jar.sha1", "sources"))
+    super.artifacts ++ Seq(Artifact(artifactID, "sources"))
+
+  // Dependencies
+  // ------------
+  // Add canonical test scope dependencies by default
+  override def libraryDependencies = {
+    import TestScope._
+    super.libraryDependencies ++ Seq(specs, scalacheck, junit)
+  }
 
   // Compile options
   // ---------------
@@ -169,14 +177,6 @@ protected trait LiftScalaProject extends BasicScalaProject with Checksum with Pu
     documentTitle(docTitle) :: CompoundDocOption("-doc-version", version.toString) :: Nil
 
   lazy val docTitle = "%s %s API".format(projectNameFormal.value, version)
-
-  // Dependencies
-  // ------------
-  // Add canonical test scope dependencies by default
-  override def libraryDependencies = {
-    import TestScope._
-    super.libraryDependencies ++ Seq(specs, scalacheck, junit)
-  }
 
   // Additional system properties for convenience
   System.setProperty("derby.stream.error.file", outputPath / "derby.log" absolutePath)

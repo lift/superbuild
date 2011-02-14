@@ -25,7 +25,7 @@ class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) with Mave
   override def repositories =
     super.repositories ++ {
       if (version.toString.endsWith("-SNAPSHOT")) Set(ScalaToolsSnapshots)
-      else Set()
+      else Set.empty
     }
 }
 
@@ -53,5 +53,8 @@ protected trait MavenCredentials extends BasicDependencyProject {
       case e => log.warn("Could not read the settings file %s [%s]".format(file, e.getMessage))
     }
   }
+
+  // publishAction does publishLocal too
+  override def publishAction = super.publishAction dependsOn publishLocal
 
 }
