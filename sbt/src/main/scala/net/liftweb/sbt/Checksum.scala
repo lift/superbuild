@@ -85,7 +85,7 @@ protected trait Checksum extends BasicScalaProject {
   // Add the corresponding checksum artifacts to the project
   override def artifacts = {
     val sa = super.artifacts
-    sa ++ sa.map(a => Artifact(a.name, a.`type` + ".sha1", a.extension + ".sha1", a.classifier, Nil, None))
+    sa ++ sa.map(a => Artifact(a.name, a.`type`, a.extension + ".sha1", a.classifier, Nil, None))
   }
 
 }
