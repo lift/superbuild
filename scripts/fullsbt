@@ -18,10 +18,13 @@ then
     exit
 fi
 
-pushd ${LIFT_FRAMEWORK_HOME:=../../framework} && \
-./liftsh "$@" && popd && \
-pushd ${LIFT_MODULES_HOME:=../../modules} && \
-./liftsh "$@" && popd && \
-pushd ${LIFT_EXAMPLES_HOME:=../../examples} && \
-./liftsh "$@" && popd
-
+pushd ${LIFT_FRAMEWORK_HOME:=../../framework} &&
+echo "building framework in $LIFT_FRAMEWORK_HOME" &&
+./liftsh "$@" && popd &&
+pushd ${LIFT_MODULES_HOME:=../../modules} &&
+echo "building modules in $LIFT_MODULES_HOME" &&
+./liftsh "$@" && popd &&
+pushd ${LIFT_EXAMPLES_HOME:=../../examples} &&
+echo "building examples in $LIFT_EXAMPLES_HOME" &&
+./liftsh "$@" && popd &&
+echo -e "\n\nBuild Complete!\n\n"
