@@ -18,23 +18,10 @@ then
     exit
 fi
 
-# translate SBT commands to Maven (or attempt to)
-MAVEN_COMMANDS=""
-
-for arg in "$@"; do
-    case "$arg" in 
-        ~*) echo "fullbuild.sh doesn't support continuous commands: \"$arg\""; exit
-            ;;
-        publish-local ) MAVEN_COMMANDS="$MAVEN_COMMANDS install" 
-            ;;
-        * ) MAVEN_COMMANDS="$MAVEN_COMMANDS $arg" 
-            ;;
-    esac
-done
-
 pushd ${LIFT_FRAMEWORK_HOME:=../../framework} && \
 ./liftsh "$@" && popd && \
 pushd ${LIFT_MODULES_HOME:=../../modules} && \
 ./liftsh "$@" && popd && \
 pushd ${LIFT_EXAMPLES_HOME:=../../examples} && \
-mvn $MAVEN_COMMANDS && popd
+./liftsh "$@" && popd
+
