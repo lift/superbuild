@@ -23,7 +23,7 @@ import _root_.sbt._
 /**
  * Pre-configured mixin for standard Lift based web application projects.
  */
-trait LiftParentProject extends ParentProject with Publishing with Dependency with Credential {
+trait LiftParentProject extends ParentProject with Credential with Dependency with Publishing {
 
   // Disable dependencies on sub-projects
   override def deliverProjectDependencies = Nil
@@ -70,12 +70,12 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
   lazy val siblings =
     info.parent.get.projectClosure.flatMap {
       case c: LiftDefaultProject => Some(c)
-      case _ => None
+      case _                     => None
     }
 
   // We modify the parameter that docAction and docTestAction takes instead of modifying the action itself
-  override def mainSources  = concatPaths(siblings) { case p: ScalaPaths => p.mainSources }
-  override def testSources  = concatPaths(siblings) { case p: ScalaPaths => p.testSources }
+  override def mainSources  = concatPaths(siblings) { case p: ScalaPaths        => p.mainSources }
+  override def testSources  = concatPaths(siblings) { case p: ScalaPaths        => p.testSources }
   override def docClasspath = concatPaths(siblings) { case p: BasicScalaProject => p.docClasspath }
 
   private def concatPaths[T](s: Seq[T])(f: PartialFunction[T, PathFinder]) = {
@@ -84,24 +84,24 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
   }
 
   // Nothing to compile, package, deliver or publish
-  override def compileAction     = Empty
-  override def testCompileAction = Empty
+  override def compileAction        = Empty
+  override def testCompileAction    = Empty
 
   override def packageAction        = Empty
   override def packageTestAction    = Empty
   override def packageSrcAction     = Empty
   override def packageTestSrcAction = Empty
 
-  override def publishLocalAction = Empty
-  override def deliverLocalAction = Empty
+  override def publishLocalAction   = Empty
+  override def deliverLocalAction   = Empty
 
-  override def deliverAction = Empty
-  override def publishAction = Empty
+  override def deliverAction        = Empty
+  override def publishAction        = Empty
 
-  override def makePomAction = Empty
+  override def makePomAction        = Empty
 
   // To avoid write collisions with outputDirectories of parent
-  override def outputRootPath        = super.outputRootPath / "apidoc"
+  override def outputRootPath        = super.outputRootPath        / "apidoc"
   override def managedDependencyPath = super.managedDependencyPath / "apidoc"
    
 }
@@ -112,6 +112,7 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
   // Initialize Boot by default
   override def consoleInit =
     """
+      |import net.liftweb.common._
       |import bootstrap.liftweb.Boot
       |
       |val b = new Boot
@@ -122,7 +123,7 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
 }
 
 
-protected trait LiftScalaProject extends BasicScalaProject with Publishing with Dependency with Credential {
+protected trait LiftScalaProject extends BasicScalaProject with Credential with Dependency with Publishing {
 
   // Auxillary artifacts
   // -------------------
@@ -134,8 +135,11 @@ protected trait LiftScalaProject extends BasicScalaProject with Publishing with 
   // Add canonical test scope dependencies by default
   override def libraryDependencies = {
     import TestScope._
-    super.libraryDependencies ++ Seq(specs, scalacheck, junit)
+    super.libraryDependencies ++ Seq(specs, scalacheck)
   }
+
+  override def managedClasspath(config: _root_.sbt.Configuration) =
+    super.managedClasspath(config) filter (f => !blackListedLibs.contains(f.asFile.getName))
 
   // Compile options
   // ---------------
@@ -151,17 +155,17 @@ protected trait LiftScalaProject extends BasicScalaProject with Publishing with 
 
   lazy val specificationEntries =
     ManifestAttributes(
-      (SPECIFICATION_TITLE, projectNameFormal.value),
+      (SPECIFICATION_TITLE,   projectNameFormal.value),
       (SPECIFICATION_VERSION, version.toString),
-      (SPECIFICATION_VENDOR, projectOrganizationFormal.value))
+      (SPECIFICATION_VENDOR,  projectOrganizationFormal.value))
 
   lazy val implementationEntries =
     ManifestAttributes(
-      (IMPLEMENTATION_TITLE, projectNameFormal.value),
-      (IMPLEMENTATION_VERSION, version.toString),
+      (IMPLEMENTATION_TITLE,     projectNameFormal.value),
+      (IMPLEMENTATION_VERSION,   version.toString),
       (IMPLEMENTATION_VENDOR_ID, organization),
-      (IMPLEMENTATION_VENDOR, projectOrganizationFormal.value),
-      (IMPLEMENTATION_URL, projectLocation.value.toString))
+      (IMPLEMENTATION_VENDOR,    projectOrganizationFormal.value),
+      (IMPLEMENTATION_URL,       projectLocation.value.toString))
 
   // override def mainResources = super.mainResources +++ "LICENSE" +++ "NOTICE"
 

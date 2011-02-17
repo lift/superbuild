@@ -30,33 +30,35 @@ protected trait Configuration extends BasicManagedProject {
   // Repositories
   // ------------
   object DownloadRepositories {
-    val local = "Local Maven Repository" at "file://" + Resolver.userMavenRoot
+    lazy val Local   = "Local Maven2 Repository" at "file://" + Resolver.userMavenRoot
   }
 
   object DistributionRepositories {
-    val local    = Resolver.file("Local Maven Distribution Repository", Path.userHome / ".m2" / "repository" asFile)
-    val snapshot = "Scala-Tools Distribution Repository for Snapshots" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
-    val release  = "Scala-Tools Distribution Repository for Releases" at "http://nexus.scala-tools.org/content/repositories/releases/"
+    lazy val local    = Resolver.file("Local Maven Distribution Repository", Path.userHome / ".m2" / "repository" asFile)
+    lazy val snapshot = "Scala-Tools Distribution Repository for Snapshots" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+    lazy val release  = "Scala-Tools Distribution Repository for Releases"  at "http://nexus.scala-tools.org/content/repositories/releases/"
   }
 
   // Properties
   // ----------
-  /** Custom property format for java.net.URL */
+  /**
+   * Custom property format for <code>java.net.URL</code>.
+   */
   implicit lazy val urlFormat = new SimpleFormat[URL] { def fromString(s: String) = new URL(s) }
 
   // Additional user-defined properties that optionally can be defined for the project
-  lazy val projectNameFormal           = propertyOptional[String](name.split("-").map(_.capitalize).mkString(" "))
+  lazy val projectNameFormal           = propertyOptional[String](formalizeName(name))
   lazy val projectLocation             = propertyOptional[URL](new URL("http://www.liftweb.net"), true)
   lazy val projectInceptionyear        = propertyOptional[Int](2006, true)
   lazy val projectOrganizationFormal   = propertyOptional[String]("WorldWide Conferencing, LLC", true)
   lazy val projectOrganizationLocation = propertyOptional[URL](projectLocation.value, true)
 
-  lazy val projectLicenseName         = propertyOptional[String]("Apache License, Version 2.0", true)
-  lazy val projectLicenseLocation     = propertyOptional[URL](new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"), true)
-  lazy val projectLicenseDistribution = propertyOptional[String]("repo", true)
+  lazy val projectLicenseName          = propertyOptional[String]("Apache License, Version 2.0", true)
+  lazy val projectLicenseLocation      = propertyOptional[URL](new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"), true)
+  lazy val projectLicenseDistribution  = propertyOptional[String]("repo", true)
 
-  final val mavenLocal    = propertyOptional[Boolean](false, true)
-  final val publishRemote = propertyOptional[Boolean](false, true)
+  final val mavenLocal                 = propertyOptional[Boolean](false, true)
+  final val publishRemote              = propertyOptional[Boolean](false, true)
 
   /**
    * Custom flag to enable local maven repository, the system property <code>maven.local</code> if available, wins.
@@ -69,9 +71,14 @@ protected trait Configuration extends BasicManagedProject {
   def enableRemotePublish = systemOptional[Boolean]("publish.remote", publishRemote.value).value
 
   /**
-   * Test if project is a SNAPSHOT
+   * Test if project is a SNAPSHOT build.
    */
   def isSnapshot = version.toString.endsWith("-SNAPSHOT")
+
+  /**
+   * Formalize given project name.
+   */
+  protected def formalizeName(name: String): String = name.split("-").map(_.capitalize).mkString(" ")
 
   /**
    * Enable setting <code>offline</code> mode via system property too.

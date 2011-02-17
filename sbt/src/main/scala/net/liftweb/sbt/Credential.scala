@@ -18,7 +18,6 @@ package net.liftweb.sbt
 
 import _root_.sbt._
 
-
 /**
  * Provides credentials for publishing to remote repositories.
  *
@@ -37,15 +36,15 @@ import _root_.sbt._
 protected trait Credential extends BasicManagedProject {
 
   lazy val ivyCredentials   = Path.userHome / ".ivy2" / ".scalatools.credentials"
-  lazy val mavenCredentials = Path.userHome / ".m2" / "settings.xml"
+  lazy val mavenCredentials = Path.userHome / ".m2"   / "settings.xml"
 
   lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
 
   (ivyCredentials.asFile, mavenCredentials.asFile) match {
-    case(ivy, _) if ivy.canRead =>
+    case (ivy, _) if ivy.canRead =>
       log.debug("Loading credentials from %s".format(ivy))
       Credentials(ivy, log)
-    case(_, mvn) if mvn.canRead =>
+    case (_, mvn) if mvn.canRead =>
       log.debug("Loading credentials from %s".format(mvn))
       loadMavenCredentials(mvn)
     case _ =>
@@ -54,7 +53,7 @@ protected trait Credential extends BasicManagedProject {
 
   protected def loadMavenCredentials(file: java.io.File) {
     try {
-      xml.XML.loadFile(file) \ "servers" \ "server" foreach(s => {
+      xml.XML.loadFile(file) \ "servers" \ "server" foreach (s => {
         val host = (s \ "id").text
         val realm = if (host == scalaTools._2) scalaTools._1 else "Unknown"
         Credentials.add(realm, host, (s \ "username").text, (s \ "password").text)

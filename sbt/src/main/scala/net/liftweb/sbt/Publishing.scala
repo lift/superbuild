@@ -32,7 +32,7 @@ protected trait Publishing extends BasicManagedProject with Configuration {
     import scala.collection.mutable.Set
     val extras: Set[Resolver] = Set.empty
     if (isSnapshot) extras += ScalaToolsSnapshots
-    if (addMavenLocal) extras += DownloadRepositories.local
+    if (addMavenLocal) extras += DownloadRepositories.Local
     super.repositories ++ extras
   }
 
@@ -59,21 +59,21 @@ protected trait Publishing extends BasicManagedProject with Configuration {
 
   override def pomExtra =
     super.pomExtra ++
-    <name>{projectNameFormal.value}</name>
-    <url>{projectLocation.value}</url>
-    <inceptionYear>{projectInceptionyear.value}</inceptionYear>
-    <organization>
-      <name>{projectOrganizationFormal.value}</name>
-      <url>{projectOrganizationLocation.value}</url>
-    </organization>
-    <licenses>
-      <license>
-        <name>{projectLicenseName.value}</name>
-        <url>{projectLicenseLocation.value}</url>
-        <distribution>{projectLicenseDistribution.value}</distribution>
-        <comments>{projectNameFormal.value} is licensed under {projectLicenseName.value}</comments>
-      </license>
-    </licenses>
+      <name>{projectNameFormal.value}</name>
+      <url>{projectLocation.value}</url>
+      <inceptionYear>{projectInceptionyear.value}</inceptionYear>
+      <organization>
+        <name>{projectOrganizationFormal.value}</name>
+        <url>{projectOrganizationLocation.value}</url>
+      </organization>
+      <licenses>
+        <license>
+          <name>{projectLicenseName.value}</name>
+          <url>{projectLicenseLocation.value}</url>
+          <distribution>{projectLicenseDistribution.value}</distribution>
+          <comments>{projectNameFormal.value} is licensed under {projectLicenseName.value}</comments>
+        </license>
+      </licenses>
 
   // TODO:
   // override def pomPostProcess(pom: Node): Node
