@@ -39,7 +39,6 @@ protected trait Dependency extends BasicManagedProject {
 
   def blackListedLibs: Seq[String] =
     "commons-codec-1.2.jar" :: "commons-codec-1.3.jar" ::
-    "commons-logging-1.0.4.jar" ::
     "servlet-api-2.5-20081211.jar" ::
     "slf4j-api-1.5.6.jar" :: "slf4j-api-1.5.10.jar" ::
     Nil
