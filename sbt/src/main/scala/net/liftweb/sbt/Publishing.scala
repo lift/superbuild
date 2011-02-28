@@ -51,11 +51,11 @@ protected trait Publishing extends BasicManagedProject with Configuration {
 
   // Add all configurations, not just the public ones
   // TODO: Eventually, we would be fine having just compile, provided, runtime and optional
-  override def makePomConfiguration = 
+  override def makePomConfiguration =
     new MakePomConfiguration(
-      deliverProjectDependencies, 
-      Some(Configurations.defaultMavenConfigurations), 
-      pomExtra, pomPostProcess, pomIncludeRepository) 
+      deliverProjectDependencies,
+      Some(Configurations.defaultMavenConfigurations),
+      pomExtra, pomPostProcess, pomIncludeRepository)
 
   override def pomExtra =
     super.pomExtra ++
