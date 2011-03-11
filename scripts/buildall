@@ -4,6 +4,8 @@
 # line arguments are passed directly to the underlying "liftsh" command 
 # calls.
 
+SBT_DEFAULT="+clean-lib +update +clean +publish"
+
 START_TIME=$(date +%s)
 mod="build setup"
 
@@ -31,6 +33,88 @@ elif test "${SCRIPT_DIR:0:1}" != "/" ; then
   SCRIPT_DIR="$PWD/$SCRIPT_DIR"
 fi
 
+function Usage() {
+    cat <<HELPDONE
+
+Usage: $0 [-d] [-p] [<additional SBT commands>]
+  -d : Perform a dry run (no build)
+  -p : Perform a git fetch + git rebase origin/master on each module
+
+  The normal SBT build command used is
+
+  ./liftsh $SBT_DEFAULT
+
+  Additional SBT commands are prepended to the SBT build command, so
+  if you call this script as
+
+  buildall '+clean-cache'
+
+  the resulting command is
+
+  ./liftsh '+clean-cache' $SBT_DEFAULT
+  
+HELPDONE
+    exit
+}
+
+# Argument processing
+while getopts ":pdh" opt; do
+    case $opt in
+        p)
+            #echo "Executing Git pull on each module"
+            PULLGIT="true"
+            ;;
+        d)
+            #echo "Dry run (no build)"
+            DRYRUN="true"
+            ;;
+        h)
+            Usage
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG"
+            Usage
+            ;;
+    esac
+done
+
+function confirm()
+{
+    echo -n "$@ "
+    read -e answer
+    for response in y Y yes YES Yes Sure sure SURE OK ok Ok
+    do
+        if [ "_$answer" == "_$response" ]
+        then
+            return 0
+        fi
+    done
+
+    # Any answer other than the list above is considerred a "no" answer
+    return 1
+}
+
+# Go ahead and confirm no pull if not set
+if [ "x$PULLGIT" = "x" ]; then
+    if confirm "Would you like to do a fetch/rebase prior to building? (y/n)"; then
+        PULLGIT="true"
+    fi
+fi
+
+function DoBuild() {
+    if [ "x$PULLGIT" != "x" ]; then
+        echo "Executing Git pull/rebase on $mod"
+        git fetch
+        git rebase origin/master
+    fi
+
+    if [ "x$DRYRUN" != "x" ]; then
+        echo "Skipping build for $mod : " ./liftsh "$@" +clean-lib +update +clean +publish
+    else
+        ./liftsh "$@" +clean-lib +update +clean +publish
+    fi
+}
+
 # First, we need to build and deploy the "superbuild" module, since it 
 # defines some dependencies and the sbt-lift-plugin. This is separate
 # primarily because superbuild has a different directory structure than
@@ -38,7 +122,7 @@ fi
 echo "Building superbuild"
 mod=superbuild
 pushd ${SCRIPT_DIR}/../sbt > /dev/null
-./liftsh "$@" +clean-lib +update +clean +publish
+DoBuild
 popd > /dev/null
 
 # Next, for each of the three main modules clean/setup the SBT environment 
@@ -47,7 +131,7 @@ for mod in framework modules examples
 do
     echo "Building $mod"
     pushd ${SCRIPT_DIR}/../../${mod} > /dev/null
-    ./liftsh "$@" +clean-lib +update +clean +publish
+    DoBuild
     popd > /dev/null
 done
 
