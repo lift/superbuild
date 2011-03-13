@@ -1,0 +1,14 @@
+To build Lift and associated stuff offline (not connected to the internet):
+
+Go through a full "publish" cycle while online.  This insures all the caches, etc. are up to date.
+
+Then:
+LIFTSH_OPTS="-Doffline=true" ./liftsh publish-local
+
+Or:
+LIFTSH_OPTS="-Doffline=true" ./liftsh
+
+And from the sbt command line:
+publish-local
+
+That way you can develop on an airplane or other places where there may not be IP connectivity.
