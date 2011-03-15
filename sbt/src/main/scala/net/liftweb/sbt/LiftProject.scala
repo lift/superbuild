@@ -34,7 +34,7 @@ trait LiftParentProject extends ParentProject with Credential with Dependency wi
 /**
  * Pre-configured mixin for standard Lift based library projects.
  */
-trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Checksum {
+trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Checksum with YuiCompressor {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
@@ -45,11 +45,17 @@ trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Check
 /**
  * Pre-configured mixin for standard Lift based web application projects.
  */
-trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject {
+trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject with YuiCompressor {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
 
+  // Modify YuiCompressor paths
+  override def yuiCompressResourcesPath       = webappPath
+  override def yuiCompressResourcesOutputPath = temporaryWarPath
+  override def extraWebappFiles               = super.extraWebappFiles +++ yuiCompressResourcesOutputPath
+  // TODO: this should be optional
+  // override def webappResources = super.webappResources --- yuiCompressResourcesPath
 }
 
 
@@ -139,7 +145,7 @@ protected trait LiftScalaProject extends BasicScalaProject with Credential with 
   }
 
   override def managedClasspath(config: _root_.sbt.Configuration) =
-    super.managedClasspath(config) filter (f => !blackListedLibs.contains(f.asFile.getName))
+    super.managedClasspath(config) filter { f => !blackListedLibs.contains(f.asFile.getName) }
 
   // Compile options
   // ---------------

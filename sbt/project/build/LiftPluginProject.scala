@@ -5,6 +5,8 @@ class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) with Mave
   // Set publish.remote=true to publish to remote repo, defaults to maven local repo
   lazy val publishRemote = propertyOptional[Boolean](systemOptional[Boolean]("publish.remote", false).value, true)
 
+  val yuiCompressor = "com.yahoo.platform.yui" % "yuicompressor" % "2.4.2" withSources()
+
   // Set up publish repository
   object PublishRepositories {
     val local    = Resolver.file("Local Maven Distribution Repository", Path.userHome / ".m2" / "repository" asFile)
