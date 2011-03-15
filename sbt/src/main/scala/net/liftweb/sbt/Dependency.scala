@@ -64,7 +64,7 @@ protected trait Dependency extends BasicManagedProject {
     lazy val scalaz               = "com.googlecode.scalaz"      % "scalaz-core_2.8.0"    % scalazVersion
     lazy val slf4j_api            = "org.slf4j"                  % "slf4j-api"            % "1.6.1"
     lazy val smackx               = "jivesoftware"               % "smack"                % "3.1.0"
-    lazy val squeryl              = "org.squeryl"               %% "squeryl"              % "0.9.4-RC3"
+    lazy val squeryl              = "org.squeryl"               %% "squeryl"              % "0.9.4-RC6"
 
     // Aliases
     lazy val openid4java  = openid4java_consumer
