@@ -167,3 +167,15 @@ trait YuiCompressor extends BasicScalaProject with MavenStyleScalaPaths {
     yuiCompressAction dependsOn(super.copyResourcesAction) describedAs desc
 
 }
+
+
+protected trait WebYuiCompressor extends BasicWebScalaProject with MavenStyleWebScalaPaths with YuiCompressor {
+
+  // Modify YuiCompressor paths
+  override def yuiCompressResourcesPath       = webappPath
+  override def yuiCompressResourcesOutputPath = temporaryWarPath
+  override def extraWebappFiles               = super.extraWebappFiles +++ yuiCompressResourcesOutputPath
+  // TODO: this should be optional
+  // override def webappResources = super.webappResources --- yuiCompressResourcesPath
+
+}

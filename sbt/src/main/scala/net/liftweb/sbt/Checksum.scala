@@ -29,6 +29,13 @@ protected trait Checksum extends BasicScalaProject {
   trait ChecksumOption extends ActionOption
   def checksumOptions: Seq[ChecksumOption] = Nil
 
+  def checksumPackage        = jarPath
+  def checksumTestPackage    = packageTestJar
+  def checksumDocsPackage    = packageDocsJar
+  def checksumSrcPackage     = packageSrcJar
+  def checksumTestSrcPackage = packageTestSrcJar
+  def checksumProjectPackage = packageProjectZip
+
   object ChecksumDescriptions {
     import BasicScalaProject._
     lazy val checksumDescriptionSuffix = " Additionally, creates the corresponding checksum file."
@@ -42,13 +49,13 @@ protected trait Checksum extends BasicScalaProject {
     lazy val PomChecksumDescription        = "Creates the pom file."      + checksumDescriptionSuffix
   }
 
-  protected def checksumAction        = checksumTask(jarPath,           checksumOptions)
-  protected def checksumTestAction    = checksumTask(packageTestJar,    checksumOptions)
-  protected def checksumDocsAction    = checksumTask(packageDocsJar,    checksumOptions)
-  protected def checksumSrcAction     = checksumTask(packageSrcJar,     checksumOptions)
-  protected def checksumTestSrcAction = checksumTask(packageTestSrcJar, checksumOptions)
-  protected def checksumProjectAction = checksumTask(packageProjectZip, checksumOptions)
-  protected def checksumPomAction     = checksumTask(pomPath,           checksumOptions)
+  protected def checksumAction        = checksumTask(checksumPackage,        checksumOptions)
+  protected def checksumTestAction    = checksumTask(checksumTestPackage,    checksumOptions)
+  protected def checksumDocsAction    = checksumTask(checksumDocsPackage,    checksumOptions)
+  protected def checksumSrcAction     = checksumTask(checksumSrcPackage,     checksumOptions)
+  protected def checksumTestSrcAction = checksumTask(checksumTestSrcPackage, checksumOptions)
+  protected def checksumProjectAction = checksumTask(checksumProjectPackage, checksumOptions)
+  protected def checksumPomAction     = checksumTask(pomPath,                checksumOptions)
 
   def checksumTask(artifactPath: => Path, options: ChecksumOption*): Task =
     checksumTask(artifactPath, options)
@@ -88,4 +95,9 @@ protected trait Checksum extends BasicScalaProject {
     sa ++ sa.map(a => Artifact(a.name, a.`type`, a.extension + ".sha1", a.classifier, Nil, None))
   }
 
+}
+
+
+protected trait WebChecksum extends BasicWebScalaProject with Checksum {
+  override def checksumPackage = warPath
 }

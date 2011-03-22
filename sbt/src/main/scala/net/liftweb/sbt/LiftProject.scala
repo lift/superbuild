@@ -45,17 +45,11 @@ trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Check
 /**
  * Pre-configured mixin for standard Lift based web application projects.
  */
-trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject with YuiCompressor {
+trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject with WebChecksum with WebYuiCompressor {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
 
-  // Modify YuiCompressor paths
-  override def yuiCompressResourcesPath       = webappPath
-  override def yuiCompressResourcesOutputPath = temporaryWarPath
-  override def extraWebappFiles               = super.extraWebappFiles +++ yuiCompressResourcesOutputPath
-  // TODO: this should be optional
-  // override def webappResources = super.webappResources --- yuiCompressResourcesPath
 }
 
 
@@ -133,8 +127,7 @@ trait LiftScalaProject extends BasicScalaProject with Credential with Dependency
 
   // Auxillary artifacts
   // -------------------
-  override def artifacts =
-    super.artifacts ++ Seq(Artifact(artifactID, "sources"))
+  override def artifacts = super.artifacts ++ Seq(Artifact(artifactID, "sources"))
 
   // Dependencies
   // ------------
