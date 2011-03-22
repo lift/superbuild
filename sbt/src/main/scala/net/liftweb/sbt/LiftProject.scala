@@ -113,7 +113,7 @@ trait LiftDefaultDocProject extends DefaultProject with LiftScalaProject {
 }
 
 
-protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaProject {
+trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaProject {
 
   // Initialize Boot by default
   override def consoleInit =
@@ -129,7 +129,7 @@ protected trait LiftWebScalaProject extends BasicWebScalaProject with LiftScalaP
 }
 
 
-protected trait LiftScalaProject extends BasicScalaProject with Credential with Dependency with Publishing {
+trait LiftScalaProject extends BasicScalaProject with Credential with Dependency with Publishing {
 
   // Auxillary artifacts
   // -------------------
