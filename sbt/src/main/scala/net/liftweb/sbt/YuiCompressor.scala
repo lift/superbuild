@@ -169,7 +169,7 @@ trait YuiCompressor extends BasicScalaProject with MavenStyleScalaPaths {
 }
 
 
-protected trait WebYuiCompressor extends BasicWebScalaProject with MavenStyleWebScalaPaths with YuiCompressor {
+trait WebYuiCompressor extends BasicWebScalaProject with MavenStyleWebScalaPaths with YuiCompressor {
 
   // Modify YuiCompressor paths
   override def yuiCompressResourcesPath       = webappPath

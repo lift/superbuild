@@ -98,6 +98,6 @@ protected trait Checksum extends BasicScalaProject {
 }
 
 
-protected trait WebChecksum extends BasicWebScalaProject with Checksum {
+trait WebChecksum extends BasicWebScalaProject with Checksum {
   override def checksumPackage = warPath
 }
