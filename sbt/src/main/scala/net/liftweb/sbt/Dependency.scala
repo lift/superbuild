@@ -32,10 +32,10 @@ import _root_.sbt._
 protected trait Dependency extends BasicManagedProject {
 
   // Add all the Scala version specific variations here
-  lazy val (scalazVersion, scalajpaVersion, squerylVersion, specsVersion, scalacheckVersion) = buildScalaVersion match {
-    case "2.8.0" => ("5.0", "1.3",          "0.9.4-RC6",  "1.6.5",          "1.7")
-    case "2.8.1" => ("5.0", "1.3",          "0.9.4-RC6",  "1.6.7.2",        "1.8")
-    case _       => ("5.0", "1.4-SNAPSHOT", "0.9.4-RC7x", "1.6.8-SNAPSHOT", "1.8")
+  lazy val (scalazVersion, specsVersion, scalacheckVersion) = buildScalaVersion match {
+    case "2.8.0" => ("5.0", "1.6.5", "1.7")
+    case "2.8.1" => ("5.0", "1.6.8", "1.8")
+    case _       => ("5.0", "1.6.8", "1.9")
   }
 
   def blackListedLibs: Seq[String] =
@@ -60,12 +60,12 @@ protected trait Dependency extends BasicManagedProject {
     lazy val openid4java_consumer = "org.openid4java"            % "openid4java-consumer" % "0.9.5"
     lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer"            % "2.3"
     lazy val sanselan             = "org.apache.sanselan"        % "sanselan"             % "0.97-incubator"
-    lazy val scalajpa             = "org.scala-libs"            %% "scalajpa"             % scalajpaVersion
+    lazy val scalajpa             = "org.scala-libs"            %% "scalajpa"             % "1.4"
     lazy val scalate_core         = "org.fusesource.scalate"     % "scalate-core"         % "1.4.1"
     lazy val scalaz               = "com.googlecode.scalaz"      % "scalaz-core_2.8.0"    % scalazVersion
     lazy val slf4j_api            = "org.slf4j"                  % "slf4j-api"            % "1.6.1"
     lazy val smackx               = "jivesoftware"               % "smack"                % "3.1.0"
-    lazy val squeryl              = "org.squeryl"               %% "squeryl"              % squerylVersion
+    lazy val squeryl              = "org.squeryl"               %% "squeryl"              % "0.9.4-RC7"
 
     // Aliases
     lazy val openid4java  = openid4java_consumer
