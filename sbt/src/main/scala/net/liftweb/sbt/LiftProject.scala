@@ -169,7 +169,7 @@ trait LiftScalaProject extends BasicScalaProject with Credential with Dependency
   // override def mainResources = super.mainResources +++ "LICENSE" +++ "NOTICE"
 
   // Make `package` depend on `test`
-  override def packageAction = super.packageAction dependsOn test
+  override def packageAction = super.packageAction dependsOn { if (!enablePackageSkipTest) test else Empty }
 
   // Publish source packages too
   override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)

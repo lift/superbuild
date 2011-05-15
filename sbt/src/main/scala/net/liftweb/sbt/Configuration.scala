@@ -60,6 +60,8 @@ protected trait Configuration extends BasicManagedProject {
   final val mavenLocal                 = propertyOptional[Boolean](false, true)
   final val publishRemote              = propertyOptional[Boolean](false, true)
 
+  final val packageSkipTest            = propertyOptional[Boolean](false, true)
+
   /**
    * Custom flag to enable local maven repository, the system property <code>maven.local</code> if available, wins.
    */
@@ -69,6 +71,11 @@ protected trait Configuration extends BasicManagedProject {
    * Custom flag to enable remote publishing, the system property <code>publish.remote</code> if available, wins.
    */
   def enableRemotePublish = systemOptional[Boolean]("publish.remote", publishRemote.value).value
+
+  /**
+   * Custom flag to enable skipping test tasks during package action, the system property <code>package.skip.test</code> if available, wins.
+   */
+  def enablePackageSkipTest = systemOptional[Boolean]("package.skip.test", packageSkipTest.value).value
 
   /**
    * Test if project is a SNAPSHOT build.
