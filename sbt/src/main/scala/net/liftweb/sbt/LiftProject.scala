@@ -144,7 +144,7 @@ trait LiftScalaProject extends BasicScalaProject with Credential with Dependency
   // ---------------
   override def compileOptions =
     super.compileOptions ++
-      compileOptions("-Xmigration", "-Xcheckinit", "-Xwarninit", "-encoding", "utf8") ++
+      compileOptions("-Xmigration", "-Xcheckinit", "-encoding", "utf8") ++
       { if (isSnapshot) Seq(ExplainTypes, Unchecked) else Seq(Optimize) }
 
   // Package options
