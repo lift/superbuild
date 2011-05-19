@@ -34,7 +34,7 @@ trait LiftParentProject extends ParentProject with Credential with Dependency wi
 /**
  * Pre-configured mixin for standard Lift based library projects.
  */
-trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Checksum with YuiCompressor {
+trait LiftDefaultProject extends DefaultProject with LiftScalaProject with YuiCompressor {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
@@ -45,7 +45,7 @@ trait LiftDefaultProject extends DefaultProject with LiftScalaProject with Check
 /**
  * Pre-configured mixin for standard Lift based web application projects.
  */
-trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject with WebChecksum with WebYuiCompressor {
+trait LiftDefaultWebProject extends DefaultWebProject with LiftWebScalaProject with WebYuiCompressor {
 
   // Modify source jar suffix
   override def packageSrcJar = defaultJarPath("-sources.jar")
