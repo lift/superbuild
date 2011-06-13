@@ -35,7 +35,17 @@ protected trait Dependency extends BasicManagedProject {
   lazy val (scalazVersion, specsVersion, scalacheckVersion) = buildScalaVersion match {
     case "2.8.0" => ("5.0", "1.6.5", "1.7")
     case "2.8.1" => ("5.0", "1.6.8", "1.8")
-    case _       => ("5.0", "1.6.8", "1.9")
+    case _       => ("6.0.1", "1.6.8", "1.9")
+  }
+
+  lazy val scalazOrganisationId = scalazVersion match {
+    case "5.0" => "com.googlecode.scalaz" 
+    case _     => "org.scalaz" 
+  }
+
+  lazy val scalazName = scalazVersion match {
+    case "5.0" => "scalaz-core_2.8.0"
+    case _     => "scalaz-core_2.9.0-1"
   }
 
   def blackListedLibs: Seq[String] =
@@ -63,7 +73,7 @@ protected trait Dependency extends BasicManagedProject {
     lazy val scalajpa             = "org.scala-libs"            %% "scalajpa"             % "1.4"
     lazy val scalap               = "org.scala-lang"             % "scalap"               % buildScalaVersion
     lazy val scalate_core         = "org.fusesource.scalate"     % "scalate-core"         % "1.4.1"
-    lazy val scalaz               = "com.googlecode.scalaz"      % "scalaz-core_2.8.0"    % scalazVersion
+    lazy val scalaz               = scalazOrganisationId         % scalazName             % scalazVersion
     lazy val slf4j_api            = "org.slf4j"                  % "slf4j-api"            % "1.6.1"
     lazy val smackx               = "jivesoftware"               % "smack"                % "3.1.0"
     lazy val squeryl              = "org.squeryl"               %% "squeryl"              % "0.9.4"
