@@ -30,6 +30,7 @@ protected trait Configuration extends BasicManagedProject {
   // Repositories
   // ------------
   object DownloadRepositories {
+    lazy val JavaNet = "Java.net Maven2 Repository" at "http://download.java.net/maven/2/"
     lazy val Local   = "Local Maven2 Repository" at "file://" + Resolver.userMavenRoot
   }
 

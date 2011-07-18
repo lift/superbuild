@@ -30,7 +30,7 @@ protected trait Publishing extends BasicManagedProject with Configuration {
   // ------------------
   override def repositories = {
     import scala.collection.mutable.Set
-    val extras: Set[Resolver] = Set.empty
+    val extras: Set[Resolver] = Set(DownloadRepositories.JavaNet)
     if (isSnapshot) extras += ScalaToolsSnapshots
     if (addMavenLocal) extras += DownloadRepositories.Local
     super.repositories ++ extras
