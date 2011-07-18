@@ -29,7 +29,7 @@ import _root_.sbt._
  *
  * @author Indrajit Raychaudhuri
  */
-protected trait Dependency extends BasicManagedProject {
+protected trait Dependency extends BasicManagedProject with Configuration {
 
   // Add all the Scala version specific variations here
   lazy val (scalazVersion, specsVersion, scalacheckVersion) = buildScalaVersion match {
@@ -37,6 +37,9 @@ protected trait Dependency extends BasicManagedProject {
     case "2.8.1" => ("5.0", "1.6.8", "1.8")
     case _       => ("6.0.1", "1.6.8", "1.9")
   }
+
+  // Use newer version of javamail iff JavaNet repo is defined, else fallback to the one available in Maven central
+  lazy val javamailVersion = if (repositories.contains(DownloadRepositories.JavaNet)) "1.4.4" else "1.4.1"
 
   lazy val scalazOrganisationId = scalazVersion match {
     case "5.0" => "com.googlecode.scalaz" 
@@ -63,7 +66,7 @@ protected trait Dependency extends BasicManagedProject {
     lazy val commons_fileupload   = "commons-fileupload"         % "commons-fileupload"   % "1.2.2"
     lazy val commons_httpclient   = "commons-httpclient"         % "commons-httpclient"   % "3.1"
     lazy val dispatch_http        = "net.databinder"            %% "dispatch-http"        % "0.7.8"
-    lazy val javamail             = "javax.mail"                 % "mail"                 % "1.4.4"
+    lazy val javamail             = "javax.mail"                 % "mail"                 % javamailVersion
     lazy val joda_time            = "joda-time"                  % "joda-time"            % "1.6.2"
     lazy val htmlparser           = "nu.validator.htmlparser"    % "htmlparser"           % "1.2.1"
     lazy val mongo_java_driver    = "org.mongodb"                % "mongo-java-driver"    % "2.5.3"
