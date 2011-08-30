@@ -69,7 +69,7 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     lazy val javamail             = "javax.mail"                 % "mail"                 % javamailVersion
     lazy val joda_time            = "joda-time"                  % "joda-time"            % "1.6.2"
     lazy val htmlparser           = "nu.validator.htmlparser"    % "htmlparser"           % "1.2.1"
-    lazy val mongo_java_driver    = "org.mongodb"                % "mongo-java-driver"    % "2.6.5"
+    lazy val casbah_util          = "com.mongodb.casbah"        %% "casbah-util"          % "2.2.0-SNAPSHOT"
     lazy val openid4java_consumer = "org.openid4java"            % "openid4java-consumer" % "0.9.5"
     lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer"            % "2.3"
     lazy val sanselan             = "org.apache.sanselan"        % "sanselan"             % "0.97-incubator"
@@ -83,8 +83,8 @@ protected trait Dependency extends BasicManagedProject with Configuration {
 
     // Aliases
     lazy val openid4java  = openid4java_consumer
-    lazy val mongo_driver = mongo_java_driver
-    lazy val mongodb      = mongo_java_driver
+    lazy val mongo_driver = casbah_util
+    lazy val mongodb      = casbah_util
   }
 
   /**
