@@ -31,12 +31,13 @@ import _root_.sbt._
  */
 protected trait Dependency extends BasicManagedProject with Configuration {
 
+  def selectDynamic(default: String, alternatives: (String, String)*)(scalaVersion: String) =
+    Map(alternatives: _*).getOrElse(scalaVersion, default)
+
   // Add all the Scala version specific variations here
-  lazy val (scalazVersion, specsVersion, scalacheckVersion) = buildScalaVersion match {
-    case "2.8.0" => ("5.0", "1.6.5", "1.7")
-    case "2.8.1" => ("5.0", "1.6.8", "1.8")
-    case _       => ("6.0.1", "1.6.8", "1.9")
-  }
+  lazy val scalazVersion = Map("2.8.0" -> "5.0", "2.8.1" -> "5.0").getOrElse(buildScalaVersion, "6.0.2")
+  lazy val specsVersion = Map("2.8.0" -> "1.6.5", "2.9.1" -> "1.6.9").getOrElse(buildScalaVersion, "1.6.8")
+  lazy val scalacheckVersion = Map("2.8.0" -> "1.7", "2.8.1" -> "1.8").getOrElse(buildScalaVersion, "1.9")
 
   // Use newer version of javamail iff JavaNet repo is defined, else fallback to the one available in Maven central
   lazy val javamailVersion = if (repositories.contains(DownloadRepositories.JavaNet)) "1.4.4" else "1.4.1"
@@ -48,7 +49,7 @@ protected trait Dependency extends BasicManagedProject with Configuration {
 
   lazy val scalazName = scalazVersion match {
     case "5.0" => "scalaz-core_2.8.0"
-    case _     => "scalaz-core_2.9.0-1"
+    case _     => "scalaz-core_2.9.1"
   }
 
   def blackListedLibs: Seq[String] =
