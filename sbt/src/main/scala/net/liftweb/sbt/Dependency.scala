@@ -35,9 +35,9 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     Map(alternatives: _*).getOrElse(scalaVersion, default)
 
   // Add all the Scala version specific variations here
-  lazy val scalazVersion = Map("2.8.0" -> "5.0", "2.8.1" -> "5.0").getOrElse(buildScalaVersion, "6.0.2")
+  lazy val scalazVersion = Map("2.8.0" -> "5.0", "2.8.1" -> "5.0", "2.8.2" -> "5.0").getOrElse(buildScalaVersion, "6.0.3")
   lazy val specsVersion = Map("2.8.0" -> "1.6.5", "2.9.1" -> "1.6.9").getOrElse(buildScalaVersion, "1.6.8")
-  lazy val scalacheckVersion = Map("2.8.0" -> "1.7", "2.8.1" -> "1.8").getOrElse(buildScalaVersion, "1.9")
+  lazy val scalacheckVersion = Map("2.8.0" -> "1.7", "2.8.1" -> "1.8", "2.8.2" -> "1.8").getOrElse(buildScalaVersion, "1.9")
 
   // Use newer version of javamail iff JavaNet repo is defined, else fallback to the one available in Maven central
   lazy val javamailVersion = if (repositories.contains(DownloadRepositories.JavaNet)) "1.4.4" else "1.4.1"
@@ -47,9 +47,29 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     case _     => "org.scalaz"
   }
 
-  lazy val scalazName = scalazVersion match {
+  lazy val scalazArtifact = scalazVersion match {
     case "5.0" => "scalaz-core_2.8.0"
     case _     => "scalaz-core_2.9.1"
+  }
+
+  lazy val scalajpaArtifact = buildScalaVersion match {
+    case "2.8.2" => "scalajpa_2.8.1"
+    case v       => "scalajpa_" + v
+  }
+
+  lazy val squerylArtifact = buildScalaVersion match {
+    case "2.8.2" => "squeryl_2.8.1"
+    case v       => "squeryl_" + v
+  }
+
+  lazy val scalacheckArtifact = buildScalaVersion match {
+    case "2.8.2" => "scalacheck_2.8.1"
+    case v       => "scalacheck_" + v
+  }
+
+  lazy val specsArtifact = buildScalaVersion match {
+    case "2.8.2" => "specs_2.8.1"
+    case v       => "specs_" + v
   }
 
   def blackListedLibs: Seq[String] =
@@ -74,13 +94,13 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     lazy val openid4java_consumer = "org.openid4java"            % "openid4java-consumer" % "0.9.5"
     lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer"            % "2.3"
     lazy val sanselan             = "org.apache.sanselan"        % "sanselan"             % "0.97-incubator"
-    lazy val scalajpa             = "org.scala-libs"            %% "scalajpa"             % "1.4"
+    lazy val scalajpa             = "org.scala-libs"             % scalajpaArtifact       % "1.4"
     lazy val scalap               = "org.scala-lang"             % "scalap"               % buildScalaVersion
     lazy val scalate_core         = "org.fusesource.scalate"     % "scalate-core"         % "1.4.1"
-    lazy val scalaz               = scalazOrganisationId         % scalazName             % scalazVersion
-    lazy val slf4j_api            = "org.slf4j"                  % "slf4j-api"            % "1.6.1"
+    lazy val scalaz               = scalazOrganisationId         % scalazArtifact         % scalazVersion
+    lazy val slf4j_api            = "org.slf4j"                  % "slf4j-api"            % "1.6.4"
     lazy val smackx               = "jivesoftware"               % "smack"                % "3.1.0"
-    lazy val squeryl              = "org.squeryl"               %% "squeryl"              % "0.9.4"
+    lazy val squeryl              = "org.squeryl"                % squerylArtifact        % "0.9.4"
 
     // Aliases
     lazy val openid4java  = openid4java_consumer
@@ -97,9 +117,9 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     lazy val atomikos_txn    = "com.atomikos"      % "transactions"            % "3.2.3"    % "provided"
     lazy val atomikos_util   = "com.atomikos"      % "atomikos-util"           % "3.2.3"    % "provided"
     lazy val hibernate_em    = "org.hibernate"     % "hibernate-entitymanager" % "3.4.0.GA" % "provided"
-    lazy val logback         = "ch.qos.logback"    % "logback-classic"         % "0.9.27"   % "provided"
+    lazy val logback         = "ch.qos.logback"    % "logback-classic"         % "1.0.0"    % "provided"
     lazy val log4j           = "log4j"             % "log4j"                   % "1.2.16"   % "provided"
-    lazy val slf4j_log4j12   = "org.slf4j"         % "slf4j-log4j12"           % "1.6.1"    % "provided"
+    lazy val slf4j_log4j12   = "org.slf4j"         % "slf4j-log4j12"           % "1.6.4"    % "provided"
     lazy val persistence_api = "javax.persistence" % "persistence-api"         % "1.0"      % "provided"
     lazy val servlet_api     = "javax.servlet"     % "servlet-api"             % "2.5"      % "provided"
     lazy val transaction_api = "javax.transaction" % "transaction-api"         % "1.1"      % "provided"
@@ -139,8 +159,8 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     lazy val junit         = "junit"                       % "junit"                    % "4.7"             % "test"
     lazy val jwebunit      = "net.sourceforge.jwebunit"    % "jwebunit-htmlunit-plugin" % "2.5"             % "test"
     lazy val mockito_all   = "org.mockito"                 % "mockito-all"              % "1.8.5"           % "test"
-    lazy val scalacheck    = "org.scala-tools.testing"    %% "scalacheck"               % scalacheckVersion % "test"
-    lazy val specs         = "org.scala-tools.testing"    %% "specs"                    % specsVersion      % "test"
+    lazy val scalacheck    = "org.scala-tools.testing"     % scalacheckArtifact         % scalacheckVersion % "test"
+    lazy val specs         = "org.scala-tools.testing"     % specsArtifact              % specsVersion      % "test"
 
     // Aliases
     lazy val jetty   = jetty6
