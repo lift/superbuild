@@ -46,8 +46,8 @@ protected trait Publishing extends BasicManagedProject with Configuration {
 
   override def managedStyle = ManagedStyle.Maven
 
-  // Make deliverAction in a downstream project resolve dependency to upstream project conveniently
-  override def publishAction = super.publishAction dependsOn publishLocal
+  // // Make deliverAction in a downstream project resolve dependency to upstream project conveniently
+  // override def publishAction = super.publishAction
 
   // Add all configurations, not just the public ones
   // TODO: Eventually, we would be fine having just compile, provided, runtime and optional
