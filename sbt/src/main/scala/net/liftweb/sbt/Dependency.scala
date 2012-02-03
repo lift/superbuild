@@ -92,7 +92,7 @@ protected trait Dependency extends BasicManagedProject with Configuration {
     lazy val htmlparser           = "nu.validator.htmlparser"    % "htmlparser"           % "1.2.1"
     lazy val mongo_java_driver    = "org.mongodb"                % "mongo-java-driver"    % "2.6.5"
     lazy val openid4java_consumer = "org.openid4java"            % "openid4java-consumer" % "0.9.5"
-    lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer"            % "2.3"
+    lazy val paranamer            = "com.thoughtworks.paranamer" % "paranamer"            % "2.4.1"
     lazy val sanselan             = "org.apache.sanselan"        % "sanselan"             % "0.97-incubator"
     lazy val scalajpa             = "org.scala-libs"             % scalajpaArtifact       % "1.4"
     lazy val scalap               = "org.scala-lang"             % "scalap"               % buildScalaVersion
