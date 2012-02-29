@@ -10,7 +10,8 @@ class LiftPluginProject(info: ProjectInfo) extends PluginProject(info) with Mave
   // Set up publish repository
   object PublishRepositories {
     val local    = Resolver.file("Local Maven Distribution Repository", Path.userHome / ".m2" / "repository" asFile)
-    val snapshot = "Scala-Tools Distribution Repository for Snapshots" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+    // val snapshot = "Scala-Tools Distribution Repository for Snapshots" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+    val snapshot = "Sonatype Nexus Repository for Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
     val release  = "Scala-Tools Distribution Repository for Releases"  at "http://nexus.scala-tools.org/content/repositories/releases/"
   }
 
@@ -36,7 +37,8 @@ protected trait MavenCredentials extends BasicDependencyProject {
   lazy val ivyCredentialsPath   = Path.userHome / ".ivy2" / ".scalatools.credentials"
   lazy val mavenCredentialsPath = Path.userHome / ".m2" / "settings.xml"
 
-  lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
+  // lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
+  lazy val scalaTools = ("Sonatype Nexus Repository Manager", "oss.sonatype.org")
 
   (ivyCredentialsPath.asFile, mavenCredentialsPath.asFile) match {
     case(ivy, _) if ivy.canRead => Credentials(ivy, log)

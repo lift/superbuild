@@ -36,7 +36,8 @@ protected trait Configuration extends BasicManagedProject {
 
   object DistributionRepositories {
     lazy val local    = Resolver.file("Local Maven Distribution Repository", Path.userHome / ".m2" / "repository" asFile)
-    lazy val snapshot = "Scala-Tools Distribution Repository for Snapshots" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+    // lazy val snapshot = "Scala-Tools Distribution Repository for Snapshots" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+    lazy val snapshot = "Sonatype Nexus Repository for Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
     lazy val release  = "Scala-Tools Distribution Repository for Releases"  at "http://nexus.scala-tools.org/content/repositories/releases/"
   }
 

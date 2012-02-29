@@ -38,7 +38,8 @@ protected trait Credential extends BasicManagedProject {
   lazy val ivyCredentials   = Path.userHome / ".ivy2" / ".scalatools.credentials"
   lazy val mavenCredentials = Path.userHome / ".m2"   / "settings.xml"
 
-  lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
+  // lazy val scalaTools = ("Sonatype Nexus Repository Manager", "nexus.scala-tools.org")
+  lazy val scalaTools = ("Sonatype Nexus Repository Manager", "oss.sonatype.org")
 
   (ivyCredentials.asFile, mavenCredentials.asFile) match {
     case (ivy, _) if ivy.canRead =>
